@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort AI — Smart Waste Classifier</title>
+    <meta name="description" content="AI-powered waste classifier that identifies waste objects and tells you if they're recyclable or non-recyclable.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="demo-body">
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <nav class="nav-bar fade-in">
+        <a href="/" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to Home
+        </a>
+        <div class="nav-logo">🌿 EcoSort AI</div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header slide-up">
+        <div class="logo">
+            <div class="logo-icon">🌿</div>
+            <div>
+                <h1 id="app-title">EcoSort AI</h1>
+                <p class="tagline">Smart Waste Classification</p>
+            </div>
+        </div>
+        <div class="header-badge">
+            <span class="badge-dot"></span>
+            <span>AI Powered</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container slide-up" style="animation-delay: 0.2s;">
+        <!-- Supported Categories Dropdown -->
+        <section class="categories-dropdown">
+            <details>
+                <summary>
+                    <span class="summary-content">
+                        <span class="summary-icon">🎓</span>
+                        <span class="summary-text">View 20 Supported Waste Categories</span>
+                    </span>
+                    <span class="chevron">▼</span>
+                </summary>
+                <div class="categories-grid">
+                    <div class="category-group">
+                        <h3>♻️ Recyclable</h3>
+                        <ul>
+                            <li>Cardboard</li>
+                            <li>Glass bottles</li>
+                            <li>Metal cans</li>
+                            <li>Paper</li>
+                            <li>Plastic bottles</li>
+                            <li>Plastic cups</li>
+                            <li>Plastic packaging</li>
+                            <li>Steel utensils</li>
+                            <li>Textiles</li>
+                            <li>Wood</li>
+                        </ul>
+                    </div>
+                    <div class="category-group">
+                        <h3>🗑️ Non-Recyclable</h3>
+                        <ul>
+                            <li>Aerosol cans</li>
+                            <li>Bio-medical waste</li>
+                            <li>Cigarette butts</li>
+                            <li>Diapers</li>
+                            <li>Electronics waste</li>
+                            <li>Food waste</li>
+                            <li>Glass shards</li>
+                            <li>Light bulbs</li>
+                            <li>Plastic bags</li>
+                            <li>Styrofoam</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <h2 class="section-title">Identify Your Waste</h2>
+            <p class="section-subtitle">Upload an image or use your camera to classify waste instantly</p>
+
+            <!-- Mode Toggle -->
+            <div class="mode-toggle" id="modeToggle">
+                <button class="mode-btn active" data-mode="upload" id="btnUploadMode">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload Image
+                </button>
+                <button class="mode-btn" data-mode="camera" id="btnCameraMode">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    Use Camera
+                </button>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-content">
+                        <div class="upload-icon-wrapper">
+                            <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <p class="drop-text">Drag & drop your image here</p>
+                        <p class="drop-subtext">or click to browse</p>
+                        <p class="drop-formats">Supports JPG, PNG, WEBP</p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <!-- Camera Area -->
+            <div class="camera-area hidden" id="cameraArea">
+                <div class="camera-container">
+                    <video id="cameraFeed" autoplay playsinline></video>
+                    <div class="camera-overlay">
+                        <div class="scan-line"></div>
+                    </div>
+                    <canvas id="cameraCanvas" hidden></canvas>
+                </div>
+                <button class="capture-btn" id="captureBtn">
+                    <div class="capture-btn-inner"></div>
+                </button>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-area hidden" id="previewArea">
+                <div class="preview-card">
+                    <img id="previewImage" alt="Preview of uploaded waste image">
+                    <button class="clear-btn" id="clearBtn" title="Clear image">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <button class="predict-btn" id="predictBtn">
+                    <span class="predict-btn-text">Classify Waste</span>
+                    <span class="predict-btn-loader hidden" id="predictLoader">
+                        <div class="spinner"></div>
+                        Analyzing...
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section hidden" id="resultsSection">
+            <div class="results-card">
+                <!-- Recyclability Badge -->
+                <div class="recyclability-badge" id="recyclabilityBadge">
+                    <div class="badge-icon" id="badgeIcon">♻️</div>
+                    <div class="badge-label" id="badgeLabel">Recyclable</div>
+                </div>
+
+                <!-- Predicted Class -->
+                <div class="predicted-class">
+                    <h3 class="result-label">Detected Object</h3>
+                    <p class="result-value" id="predictedClass">—</p>
+                </div>
+
+                <!-- Confidence -->
+                <div class="confidence-section">
+                    <div class="confidence-header">
+                        <span class="result-label">Confidence</span>
+                        <span class="confidence-value" id="confidenceValue">0%</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                </div>
+
+                <!-- Category Info -->
+                <div class="category-info" id="categoryInfo">
+                    <div class="category-card recyclable-card" id="categoryCard">
+                        <div class="category-icon" id="categoryIcon">♻️</div>
+                        <div>
+                            <div class="category-title" id="categoryTitle">Recyclable</div>
+                            <div class="category-desc" id="categoryDesc">This item can be recycled</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disposal Tip -->
+                <div class="disposal-section">
+                    <h3 class="result-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        Disposal Tip
+                    </h3>
+                    <p class="disposal-text" id="disposalTip">—</p>
+                </div>
+
+                <!-- Top 3 Predictions -->
+                <div class="top-predictions">
+                    <h3 class="result-label">Top Predictions</h3>
+                    <div class="predictions-list" id="predictionsList"></div>
+                </div>
+            </div>
+
+            <!-- Try Again -->
+            <button class="try-again-btn" id="tryAgainBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Classify Another
+            </button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>A Deep Learning Project by Nikhil Singh Bisht · Powered by MobileNetV2</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

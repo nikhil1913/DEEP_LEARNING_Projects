@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning Brief — EcoSort AI Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="brief-body">
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <nav class="nav-bar fade-in">
+        <a href="/" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to Home
+        </a>
+        <div class="nav-logo">🌿 EcoSort AI</div>
+    </nav>
+
+    <main class="brief-container">
+        <header class="brief-header slide-up">
+            <h1 class="brief-title">Deep Learning Project Brief</h1>
+            <p class="brief-subtitle">An in-depth guide to developing the EcoSort AI Waste Classifier.</p>
+            <div class="brief-author">By Nikhil Singh Bisht</div>
+        </header>
+
+        <article class="brief-content">
+            <!-- Summary Overview -->
+            <section class="brief-section slide-up" style="animation-delay: 0.1s;">
+                <h2 class="section-heading">Project Overview</h2>
+                <p>This project is a deep learning-based image classification system designed to identify different types of waste from images. It uses TensorFlow and Keras to build and train models, starting with a custom CNN and then exponentially improving performance using transfer learning with <strong>MobileNetV2</strong>.</p>
+                <div class="info-card">
+                    <p>The core objective is to automate the categorization of 20 unique waste types, aiding in the global effort toward more efficient recycling and waste management.</p>
+                </div>
+            </section>
+
+            <!-- Data Acquisition and cleaning -->
+            <section class="brief-section slide-up" style="animation-delay: 0.2s;">
+                <h2 class="section-heading">1. Data Acquisition & Sanitization</h2>
+                <p>Developing a high-accuracy classifier requires a diverse and balanced dataset. We built a custom image scraper using the <code>icrawler</code> library to fetch images from Google and Bing.</p>
+                <ul>
+                    <li><strong>Categories</strong>: 20 distinct classes (e.g., Plastic bottles, Cardboard, Styrofoam, Bio-medical waste).</li>
+                    <li><strong>Volume</strong>: Approximately 250 images per category were scraped.</li>
+                </ul>
+                <img src="/static/dataset_preview.png" alt="Dataset Preview" class="brief-image">
+                <p>After scraping, a rigorous <strong>Data Cleaning</strong> process was initiated. We implemented a script to check the integrity of every image file. Using <code>tf.image.decode_image</code>, we identified and removed corrupted files that could crash the training process, ensuring only valid RGB images remained.</p>
+            </section>
+
+            <!-- Preprocessing and augmentation -->
+            <section class="brief-section slide-up" style="animation-delay: 0.3s;">
+                <h2 class="section-heading">2. Preprocessing & Augmentation</h2>
+                <p>Before training, images were resized to <strong>222x222 pixels</strong>. To enhance the model's ability to generalize to new, unseen photos, we applied heavy <strong>Data Augmentation</strong>:</p>
+                <div class="augmentation-grid">
+                    <div class="aug-item">Rotation & Zoom</div>
+                    <div class="aug-item">Horizontal & Vertical Flips</div>
+                    <div class="aug-item">Translation Shifts</div>
+                </div>
+                <p>Normalization was critical—input pixel values were rescaled to the range [-1, 1], aligning with the expectations of the pre-trained weights.</p>
+            </section>
+
+            <!-- The Scratch CNN failure -->
+            <section class="brief-section slide-up" style="animation-delay: 0.4s;">
+                <h2 class="section-heading">3. The Custom CNN (Initial Failure)</h2>
+                <p>Every breakthrough follows a challenge. We initially designed a custom Convolutional Neural Network (CNN) from scratch. Despite careful tuning, this model struggled with the high variance of the 20 waste categories.</p>
+                <div class="warning-box">
+                    <p><strong>Result</strong>: The custom CNN peaked at a mere <strong>19% accuracy</strong>. Recognizing that the model was not converging, the training cell was stopped. Building a model from scratch for such complex visual features proved inefficient compared to leveraging pre-learned patterns.</p>
+                </div>
+            </section>
+
+            <!-- Transfer Learning Success -->
+            <section class="brief-section slide-up" style="animation-delay: 0.5s;">
+                <h2 class="section-heading">4. MobileNetV2 & Transfer Learning</h2>
+                <p>We pivoted to Transfer Learning using <strong>MobileNetV2</strong>, a state-of-the-art architecture optimized for performance. By using weights pre-trained on the ImageNet dataset, the model inherited a deep understanding of shapes, colors, and textures.</p>
+                
+                <h3>Model Architecture</h3>
+                <pre class="code-block"><code>base_model = MobileNetV2(
+    input_shape=(224, 224, 3),
+    include_top=False,
+    weights='imagenet'
+)
+base_model.trainable = False
+
+model = Sequential([
+    base_model,
+    GlobalAveragePooling2D(),
+    Dense(128, activation='relu'),
+    Dropout(0.4),
+    Dense(64, activation='relu'),
+    Dense(20, activation='softmax')
+])</code></pre>
+
+                <img src="/static/model_diagram.png" alt="Model Architecture" class="brief-image">
+            </section>
+
+            <!-- Fine tuning -->
+            <section class="brief-section slide-up" style="animation-delay: 0.6s;">
+                <h2 class="section-heading">5. Fine-Tuning & Deployment</h2>
+                <p>After reaching a stable accuracy with frozen weights, we initiated <strong>Fine-Tuning</strong>. We un-froze the <strong>last 2 convolutional layers</strong> of the MobileNetV2 base and re-trained the model with a very low learning rate (<code>1e-5</code>).</p>
+                <div class="info-card">
+                    <p>This allowed the model to adjust its deepest filters to the specific visual nuances of trash and recyclables, eventually reaching over <strong>73% validation accuracy</strong>.</p>
+                </div>
+                <p>The final trained model is saved in <code>.keras</code> format and deployed via this FastAPI-powered web application for real-time inference.</p>
+            </section>
+        </article>
+
+        <div class="brief-cta slide-up" style="animation-delay: 0.7s;">
+            <a href="/demo" class="cta-button">Test the Deployed Model 🚀</a>
+        </div>
+    </main>
+
+    <footer class="brief-footer fade-in" style="animation-delay: 0.8s;">
+        <p>© 2026 Deep Learning Project by Nikhil Singh Bisht</p>
+    </footer>
+
+    <script>
+        const bg = document.getElementById('bgParticles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+            p.style.left = (Math.random() * 100) + '%';
+            p.style.animationDuration = (Math.random() * 20 + 15) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            bg.appendChild(p);
+        }
+    </script>
+</body>
+</html>

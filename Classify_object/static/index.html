@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort AI — Future of Waste Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="landing-body">
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <main class="landing-container">
+        <header class="landing-header fade-in">
+            <div class="logo-large">🌿</div>
+            <h1 class="hero-title">EcoSort AI</h1>
+            <p class="hero-subtitle">Harnessing Deep Learning for a Cleaner Planet</p>
+        </header>
+
+        <section class="options-container">
+            <!-- Option 1: Demo -->
+            <a href="/demo" class="option-card slide-up" style="animation-delay: 0.2s;">
+                <div class="option-icon">🚀</div>
+                <div class="option-content">
+                    <h2 class="option-title">Try Demo Model</h2>
+                    <p class="option-desc">Upload or capture an image to identify waste and its recyclability in real-time.</p>
+                </div>
+                <div class="option-footer">
+                    <span>Launch Demo</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+            </a>
+
+            <!-- Option 2: Brief -->
+            <a href="/brief" class="option-card slide-up" style="animation-delay: 0.4s;">
+                <div class="option-icon">📖</div>
+                <div class="option-content">
+                    <h2 class="option-title">Project Brief</h2>
+                    <p class="option-desc">Explore the journey of building this AI, from initial failures to the final successful model.</p>
+                </div>
+                <div class="option-footer">
+                    <span>Read Explanation</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+            </a>
+        </section>
+
+        <footer class="landing-footer fade-in" style="animation-delay: 0.6s;">
+            <p>A Deep Learning Project by Nikhil Singh Bisht · Powered by MobileNetV2</p>
+        </footer>
+    </main>
+
+    <script>
+        // Simple particle generator for landing
+        const bg = document.getElementById('bgParticles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
+            p.style.left = (Math.random() * 100) + '%';
+            p.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            bg.appendChild(p);
+        }
+    </script>
+</body>
+</html>
